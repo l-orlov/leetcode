@@ -3,21 +3,27 @@ package jump_game
 // всегда прыгать максимально, если не можем максимально прыгнуть на текущем шаге, то прыгать на макс. -1
 
 func canJump(nums []int) bool {
-	return canJumpFromCell(nums, 0)
-}
-
-func canJumpFromCell(nums []int, i int) bool {
-	if i >= len(nums)-1 {
-		return true
+	canJumpIdx := 0
+	for i, num := range nums {
+		if i > canJumpIdx {
+			return false
+		}
+		canJumpIdx = max(canJumpIdx, i+num)
 	}
 
-	for j := nums[i]; j > 0; j-- {
-		if canJumpFromCell(nums, i+j) {
-			return true
+	return true
+}
+
+func jump2(nums []int) int {
+	rightMaxPos, maxPos := 0, 0
+	answer := 0
+	for i := 0; i < len(nums)-1 && maxPos < len(nums); i++ {
+		rightMaxPos = max(rightMaxPos, i+nums[i])
+		if i == maxPos {
+			answer++
+			maxPos = rightMaxPos
 		}
 	}
 
-	nums[i] = 0
-
-	return false
+	return answer
 }
